@@ -3,9 +3,15 @@ from intern.resource.boss.resource import *
 import numpy as np
 
 class bossHandler:
+    """
+    This is a class for interacting with BOSS. It basically is a wrapper for Intern.
+    """
     def __init__(self, collection_name):
         """
-        Constructor
+        Constructor:
+        Takes the following argument:
+        :param collection_name: name of the collection in BOSS
+        :type collection_name: string
         """
         self.collection_name = collection_name
         try:
@@ -18,7 +24,7 @@ class bossHandler:
 
     def list_experiments(self):
         """
-        List all the experiments available in current collection
+        :return: all the experiments available in current collection
         """
         exp_list = self.rmt.list_experiments(self.collection_name)
         return exp_list
@@ -34,7 +40,7 @@ class bossHandler:
     
     def get_experiment(self):
         """
-        Return the currently selected experiment for this handler
+        :return: the currently selected experiment for this handler
         """
         if hasattr(self,'experiment'):
             
@@ -45,7 +51,7 @@ class bossHandler:
             
     def list_channels(self):
         """
-        List all channel in currently selected experiment
+        :return: all channel in currently selected experiment
         """
         return self.rmt.list_channels(self.collection_name, self.experiment.name)
         
@@ -58,7 +64,7 @@ class bossHandler:
     
     def get_coordinate_frame(self):
         """
-        Get current experiment's coordinate frame
+        Return: current experiment's coordinate frame
         """
         tmp = CoordinateFrameResource(name=self.experiment.coord_frame)
         coor = self.rmt.get_project(tmp)
@@ -67,7 +73,7 @@ class bossHandler:
     
     def get_all(self):
         """
-        Get a the entire channel image data at its native resolution
+        :return: the entire channel image data at its native resolution
         """
         x_rng = [self.coordinate_frame.x_start , self.coordinate_frame.x_stop]
         y_rng = [self.coordinate_frame.y_start , self.coordinate_frame.y_stop]
@@ -77,7 +83,7 @@ class bossHandler:
         
     def get_cutout(self, x_range, y_range, z_range, resolution=0):
         """
-        Return a cutout of the image data
+        :return: a cutout of the image data
         """
         return self.rmt.get_cutout(self.channel , resolution , x_range , y_range , z_range)
         
