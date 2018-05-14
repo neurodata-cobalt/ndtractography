@@ -1,3 +1,5 @@
+"""This file has the core classes and functions for tractography"""
+
 from scipy.ndimage.filters import laplace
 from bossHandler import bossHandler
 from intern.resource.boss.resource import *
@@ -22,9 +24,16 @@ from matplotlib import animation
 from IPython.display import HTML
 
 class vertices:
+    """
+    implementation of vertex weight calculations based on Seyoun Park's 2014 paper
+    """
     def __init__(self, mask , vol):
         '''
         Constructor
+        :param mask: a binary mask (binarized version of the input)
+        :param vol: raw volume
+        :type mask: uint
+        :type vol: uint
         '''
         self.mask = np.copy(mask) # binarized volume
         self.masked_vol = np.copy(vol)
@@ -83,14 +92,28 @@ class vertices:
 
 
 class tractoHandler:
+    """
+    This class contains the core functionality for the tractography pipeline
+    """
     def __init__(self, data_cutout_raw):
         '''
         Constructor
+        :param data_cutout_raw: input raw 3d volume
         '''
         self.data_cutout_raw = data_cutout_raw
         
     def run_tractography(self, methodn):
-
+        """
+        Runs the tractography pipeline.
+        :param methodn: The binarization method:
+                        0: slice-by-slice without subsampling (slowest, most accurate)
+                        1: slice-by-slice with subsampling
+                        2: sub-vol by sub-vol with subsampling
+                        3: slice-by-slice with subsampling and percentile
+         :type methodn: int               
+         :return: returns the skeleton, connected components, colormapped connected components, and the binarized input
+         
+        """
         # Binarize
         if methodn == 3:
             print('slice-by-slice with subsampling and percentile')
@@ -208,8 +231,12 @@ class tractoHandler:
     
     def find_closest_voxel(self, voxel, vol_idx):
         '''
-        vol_idx: indices of nonzero elements; shape: (nx3)
         Finds the closest non-zero voxel in vol_idx to point x,y,z
+        :param vol_idx: indices of nonzero elements; shape: (nx3)
+        :param voxel: voxel coordinates
+        :type vol_idx: nx3 int
+        :type voxel: int (3d coordinates)
+        :return: closes voxel coordinates
         '''
         subtrc = vol_idx - [voxel[0], voxel[1], voxel[2]]
         minIdx = np.argmin(np.linalg.norm(subtrc, axis = 1))
@@ -219,6 +246,11 @@ class tractoHandler:
     def quantify(self, nz_data_1, nz_data_2):
         '''
         Method of quantification: for each voxel in nz_data_1, find the closest voxel in the nz_data_2
+        :param nz_data_1: coordinates of non-zero voxels in volume 1
+        :param nz_data_2: coordinates of non-zero voxels in volume 2
+        :type nz_data_1: nx3 list of coordinates
+        :type nz_data_2: nx3 list of coordinates
+        
         '''
         # find indices of non-zero elements in test data:
         closest_voxels = np.empty(nz_data_1.shape)
@@ -233,6 +265,11 @@ class tractoHandler:
 
 
 def videoviz(dateset1, dataset2):
+    """
+    Creates a video animation of dataset1 and dataset2 (time is z axis)
+    :param dataset1: A 3d matrix of an image 
+    :param dataset2: A 3d matrix of an image 
+    """
     z_rng = [0 , dateset1.shape[2]]
     # z_rng = [70,80]
     fig, (im1, im2) = plt.subplots(1, 2)
