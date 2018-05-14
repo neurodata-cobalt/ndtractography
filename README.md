@@ -1,5 +1,5 @@
-# _COBALT Tractography_
-Package that performs tractography on 3D tiff stack volumes
+# _COBALT's ndTractography_
+Package for tractography on 3D neuronal images
 
 ## System Requirements
 Python 2.7 <br/>
