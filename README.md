@@ -42,4 +42,5 @@ from cobalt_tractography.bossHandler import *
 from cobalt_tractography.tractography import *
 ```
 
-
+## Resources
+* [ndtractography algorithm pseudocode and flow diagram](https://github.com/neurodata-cobalt/ndtractography/wiki)
