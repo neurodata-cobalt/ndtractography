@@ -257,7 +257,7 @@ def videoviz(dateset1, dataset2):
         ax1.autoscale()
 
         ax2.set_data(dataset2[:,:,i])
-        im2.set_title('Seights; Z=' + str(i))
+        im2.set_title('Skeleton; Z=' + str(i))
     #     ax2.set_cmap('gray')
         ax2.autoscale()
         return ax1
