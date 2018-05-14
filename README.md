@@ -8,10 +8,15 @@ Currently tested on ubuntu 16
 
 ### Pull and run docker
 A docker image with python 2.7 needs to be pulled and run. The following docker is optimized for multi-core Intel processors:
+
 ```docker pull neurodata/ndreg```
+
 Then run:
+
 ```docker run -p 8888:8888 neurodata/ndreg```
+
 Then execute /bin/bash inside the docker:
+
 ```
 docker exec -it <docker name> /bin/bash/
 ```
