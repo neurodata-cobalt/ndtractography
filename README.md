@@ -2,8 +2,9 @@
 Package that performs tractography on 3D tiff stack volumes
 
 ## System Requirements
-Python 2.7
-docker
+Python 2.7 <br/>
+docker <br/>
+Currently tested on ubuntu 16
 
 ### Pull and run docker
 A docker image with python 2.7 needs to be pulled and run. The following docker is optimized for multi-core Intel processors:
