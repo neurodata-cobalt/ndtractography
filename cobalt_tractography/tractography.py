@@ -18,6 +18,8 @@ from scipy.ndimage.morphology import *
 from tifffile import imsave
 from skimage import img_as_ubyte, img_as_uint, color
 from sklearn.cluster import KMeans
+from matplotlib import animation
+from IPython.display import HTML
 
 class vertices:
     def __init__(self, mask , vol):
@@ -229,6 +231,39 @@ class tractoHandler:
      
     
 
+
+def videoviz(dateset1, dataset2):
+    z_rng = [0 , dateset1.shape[2]]
+    # z_rng = [70,80]
+    fig, (im1, im2) = plt.subplots(1, 2)
+
+    # fig.set_facecolor('black')
+    ax1 = im1.imshow(dateset1[:,:,0], animated=True)
+    ax2 = im2.imshow(dataset2[:,:,0], animated=True)
+    
+    im1.get_xaxis().set_visible(False)
+    im2.get_xaxis().set_visible(False)
+
+    im1.get_yaxis().set_visible(False)
+    im2.get_yaxis().set_visible(False)
+
+    im1.set_title('Raw data')
+    im2.set_title('Skeleton')
+
+    def animate(i):
+        ax1.set_data(dateset1[:,:,i])
+        im1.set_title('Raw data; Z= ' + str(i))
+    #     ax1.set_cmap('gray')
+        ax1.autoscale()
+
+        ax2.set_data(dataset2[:,:,i])
+        im2.set_title('Seights; Z=' + str(i))
+    #     ax2.set_cmap('gray')
+        ax2.autoscale()
+        return ax1
+
+    anim = animation.FuncAnimation(fig, animate, frames = np.arange(z_rng[0],z_rng[1]), interval = 50)
+    return anim
 
 
            
