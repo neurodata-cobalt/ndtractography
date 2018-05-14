@@ -6,6 +6,6 @@ matplotlib
 tifffile
 scikit-fmm
 intern
-
+pandas
 
 
