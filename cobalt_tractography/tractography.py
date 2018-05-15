@@ -229,36 +229,6 @@ class tractoHandler:
 
         return skeleton, concomp, concomp_col, data_cutout_binarized
     
-    def find_closest_voxel(self, voxel, vol_idx):
-        '''
-        Finds the closest non-zero voxel in vol_idx to point x,y,z
-        :param vol_idx: indices of nonzero elements; shape: (nx3)
-        :param voxel: voxel coordinates
-        :type vol_idx: nx3 int
-        :type voxel: int (3d coordinates)
-        :return: closes voxel coordinates
-        '''
-        subtrc = vol_idx - [voxel[0], voxel[1], voxel[2]]
-        minIdx = np.argmin(np.linalg.norm(subtrc, axis = 1))
-
-        return vol_idx[minIdx,:]
-
-    def quantify(self, nz_data_1, nz_data_2):
-        '''
-        Method of quantification: for each voxel in nz_data_1, find the closest voxel in the nz_data_2
-        :param nz_data_1: coordinates of non-zero voxels in volume 1
-        :param nz_data_2: coordinates of non-zero voxels in volume 2
-        :type nz_data_1: nx3 list of coordinates
-        :type nz_data_2: nx3 list of coordinates
-        
-        '''
-        # find indices of non-zero elements in test data:
-        closest_voxels = np.empty(nz_data_1.shape)
-        for idx, voxel in enumerate(nz_data_1):
-            closest_voxel = self.find_closest_voxel(voxel , nz_data_2)
-            closest_voxels[idx,:] = closest_voxel
-
-        return closest_voxels    
         
      
     
@@ -302,6 +272,38 @@ def videoviz(dateset1, dataset2):
     anim = animation.FuncAnimation(fig, animate, frames = np.arange(z_rng[0],z_rng[1]), interval = 50)
     return anim
 
+def find_closest_voxel(self, voxel, vol_idx):
+    '''
+    Finds the closest non-zero voxel in vol_idx to point x,y,z
+    :param vol_idx: indices of nonzero elements; shape: (nx3)
+    :param voxel: voxel coordinates
+    :type vol_idx: nx3 int
+    :type voxel: int (3d coordinates)
+    :return: closes voxel coordinates
+    '''
+    subtrc = vol_idx - [voxel[0], voxel[1], voxel[2]]
+    minIdx = np.argmin(np.linalg.norm(subtrc, axis = 1))
+
+    return vol_idx[minIdx,:]
+
+def quantify(self, nz_data_1, nz_data_2):
+    '''
+    Method of quantification: for each voxel in nz_data_1, find the closest voxel in the nz_data_2
+    :param nz_data_1: coordinates of non-zero voxels in volume 1
+    :param nz_data_2: coordinates of non-zero voxels in volume 2
+    :type nz_data_1: nx3 list of coordinates
+    :type nz_data_2: nx3 list of coordinates
+
+    '''
+    # find indices of non-zero elements in test data:
+    closest_voxels = np.empty(nz_data_1.shape)
+    for idx, voxel in enumerate(nz_data_1):
+        closest_voxel = find_closest_voxel(voxel , nz_data_2)
+        closest_voxels[idx,:] = closest_voxel
+
+    return closest_voxels    
+
+
 
 def plot_quantification(labeled_path, skeleton, x_size, y_size, z_size):
     """
@@ -323,10 +325,10 @@ def plot_quantification(labeled_path, skeleton, x_size, y_size, z_size):
 
     nz_test_data = np.asarray(np.nonzero(skeleton)).T
     if method == 'm2l':
-        closest_voxels = th.quantify(nz_skeleton, labeled_0_nz_voxel_ids)
+        closest_voxels = quantify(nz_skeleton, labeled_0_nz_voxel_ids)
         subtrct = closest_voxels - nz_skeleton
     elif method == 'l2m':
-        closest_voxels = th.quantify(labeled_0_nz_voxel_ids, nz_skeleton)
+        closest_voxels = quantify(labeled_0_nz_voxel_ids, nz_skeleton)
         subtrct = closest_voxels - labeled_0_nz_voxel_ids
 
     distances = np.linalg.norm(subtrct.dot(np.diag([x_size, y_size, z_size])), axis = 1)
