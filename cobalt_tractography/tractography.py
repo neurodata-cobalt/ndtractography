@@ -272,7 +272,7 @@ def videoviz(dateset1, dataset2):
     anim = animation.FuncAnimation(fig, animate, frames = np.arange(z_rng[0],z_rng[1]), interval = 50)
     return anim
 
-def find_closest_voxel(self, voxel, vol_idx):
+def find_closest_voxel(voxel, vol_idx):
     '''
     Finds the closest non-zero voxel in vol_idx to point x,y,z
     :param vol_idx: indices of nonzero elements; shape: (nx3)
@@ -286,7 +286,7 @@ def find_closest_voxel(self, voxel, vol_idx):
 
     return vol_idx[minIdx,:]
 
-def quantify(self, nz_data_1, nz_data_2):
+def quantify(nz_data_1, nz_data_2):
     '''
     Method of quantification: for each voxel in nz_data_1, find the closest voxel in the nz_data_2
     :param nz_data_1: coordinates of non-zero voxels in volume 1
