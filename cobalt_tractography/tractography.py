@@ -303,4 +303,39 @@ def videoviz(dateset1, dataset2):
     return anim
 
 
-           
+def plot_quantification(labeled_path, skeleton, x_size, y_size, z_size):
+    """
+    Plot quantification using a labeled dataset
+    For each machine labeled voxel find the closest manually labeled and calculate the physical distance
+    x_size, y_size, z_size: physical sizes of the voxels
+    """
+    labeled_0_nz_voxel_ids = np.genfromtxt(labeled_path, delimiter=' ')
+    labeled_0_nz_voxel_ids = np.around(np.uint16(labeled_0_nz_voxel_ids[:,2:5]))
+    labeled_0_nz_voxel_ids = labeled_0_nz_voxel_ids[:, [1,0,2]]
+    nz_skeleton = np.asarray(np.nonzero(skeleton)).T
+
+    # physical sizes:
+    #     x_size = 0.585 #um
+    #     y_size = 0.585 #um
+    #     z_size = 5.0 #um
+    method = 'm2l' #m2l (for each machine labled find the closest manual labels) or 
+                   #l2m (for each manual labeled find the closest machine labeled)
+
+    nz_test_data = np.asarray(np.nonzero(skeleton)).T
+    if method == 'm2l':
+        closest_voxels = th.quantify(nz_skeleton, labeled_0_nz_voxel_ids)
+        subtrct = closest_voxels - nz_skeleton
+    elif method == 'l2m':
+        closest_voxels = th.quantify(labeled_0_nz_voxel_ids, nz_skeleton)
+        subtrct = closest_voxels - labeled_0_nz_voxel_ids
+
+    distances = np.linalg.norm(subtrct.dot(np.diag([x_size, y_size, z_size])), axis = 1)
+    binSize = 12.5 #um
+    nbins = np.uint32(np.around((np.max(distances) - np.min(distances))/12.5))
+
+    histret=plt.hist(distances, bins=nbins, weights=np.zeros_like(distances) + 1. / distances.size )
+    plt.xlabel((
+        'Machine labeled' if method == 'm2l' else 'Manual labled' ) + ' voxels\' distance from closest point in ' + (
+        'manual labeled data (um)' if method == 'm2l' else 'machine labeled data (um)'))
+    plt.ylabel('Relative count')
+    plt.title('Histogram of physical distances; Bin size = ' + str(binSize) + ' um')           
