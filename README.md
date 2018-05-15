@@ -6,6 +6,21 @@ Python 2.7 <br/>
 docker <br/>
 Currently tested on ubuntu 16
 
+### Software Dependencies
+The following python packages are needed. They will be automatically downloaded and installed once you pip install the package:
+
+scikit_image <br/>
+scipy <br/>
+numpy <br/>
+requests <br/>
+intern <br/>
+tifffile<br/>
+matplotlib <br/>
+scikit_learn <br/>
+scikit-fmm <br/>
+
+## Installation
+
 ### Pull and run docker
 A docker image with python 2.7 needs to be pulled and run. The following docker is optimized for multi-core Intel processors:
 
@@ -21,20 +36,8 @@ Then execute /bin/bash inside the docker:
 docker exec -it <docker name> /bin/bash/
 ```
 
-### Software Dependencies
-The following python packages are needed. They will be automatically downloaded and installed once you pip install the package:
+### Clone and pip install
 
-scikit_image <br/>
-scipy <br/>
-numpy <br/>
-requests <br/>
-intern <br/>
-tifffile<br/>
-matplotlib <br/>
-scikit_learn <br/>
-scikit-fmm <br/>
-
-## Installation
 First clone this repository:
 ```git clone https://github.com/neurodata-cobalt/ndtractography.git```
 
