@@ -43,6 +43,17 @@ First clone this repository:
 
 Then run ``` pip install .``` inside ndtractography directory to install the package and its requirements
 
+### Adding BOSS API token
+
+Save your token at `~/.intern/intern.cfg` with the following format:
+
+```
+[Default]
+protocol = https
+host = api.boss.neurodata.io
+token = <your BOSS API token>
+```
+
 ## Use
 You can now use the functions by importing the following in your python script:
 ```
