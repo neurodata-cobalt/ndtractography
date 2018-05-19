@@ -1,7 +1,7 @@
 """This file has the core classes and functions for tractography"""
 
 from scipy.ndimage.filters import laplace
-from bossHandler import bossHandler
+from cobalt_tractography.bossHandler import bossHandler
 from intern.resource.boss.resource import *
 from intern.remote.boss import BossRemote
 from skimage import filters
